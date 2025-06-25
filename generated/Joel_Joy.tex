@@ -1,0 +1,70 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{array}
+\usepackage{setspace}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+
+% Personal Information Variables
+\newcommand{\name}{Joel Joy}
+\newcommand{\dob}{09-04-2004}
+\newcommand{\blood}{B-}
+\newcommand{\address}{Paralil}
+\newcommand{\experience}{3}
+\newcommand{\education}{B.Tech}
+\newcommand{\assignedclass}{SUB}
+\newcommand{\duties}{Asst Secretary, Media Person}
+\newcommand{\phone}{9567659364}
+\newcommand{\email}{joeljoy1237@gmail.com}
+\newcommand{\profileimage}{profile5.jpg}
+
+\geometry{top=1in, bottom=1in, left=1in, right=1in}
+\setlength{\parindent}{0pt}
+\setstretch{1.5}
+\pagestyle{empty}
+
+% Define a border frame
+\newcommand{\borderframe}{
+    \begin{tikzpicture}[remember picture, overlay]
+        \draw[line width=1pt] 
+            ($(current page.north west)+(0.5in,-0.5in)$) 
+            rectangle 
+            ($(current page.south east)+(-0.5in,0.5in)$);
+    \end{tikzpicture}
+}
+
+\begin{document}
+
+\borderframe
+
+% Title
+\begin{center}
+    {\huge\textbf{BIODATA}}\\[1em]
+    \IfFileExists{\profileimage}{
+    \vspace{1em}
+        \includegraphics[width=0.40\textwidth]{\profileimage}
+    }{
+        \framebox[0.30\textwidth]{\centering No Image}
+    }
+\end{center}
+
+\vspace{1em}
+{\large
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{\hspace{1.5cm}} >{\bfseries}p{0.4\linewidth} p{0.45\linewidth}}
+Name & : \name \\
+Date of Birth & : \dob \\
+Address & : \address \\
+Blood Group & : \blood \\
+Years of Experience & : \experience \\
+Educational Qualification & : \education \\
+Assigned Class & : \assignedclass \\
+Other Duties & : \duties \\
+Phone Number & : \phone \\
+Email ID & : \href{mailto:\email}{\email} \\
+\end{tabular}
+}
+
+\end{document} 
