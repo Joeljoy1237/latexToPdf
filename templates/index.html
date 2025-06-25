@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bio Creator</title>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        form { max-width: 500px; margin: auto; }
+        label { display: block; margin-top: 15px; }
+        input, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        button { margin-top: 20px; padding: 10px 20px; }
+        @media (max-width: 600px) {
+            body { margin: 10px; }
+            form { max-width: 100%; }
+            input, textarea { padding: 6px; font-size: 1em; }
+            button { width: 100%; font-size: 1em; }
+        }
+    </style>
+    <script>
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            var btn = document.getElementById('generateBtn');
+            btn.disabled = true;
+            btn.innerText = 'Generating...';
+            var form = document.getElementById('biodataForm');
+            var formData = new FormData(form);
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    body: formData
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to generate PDF');
+                }
+                const blob = await response.blob();
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let filename = 'biodata.pdf';
+                if (contentDisposition) {
+                    const match = contentDisposition.match(/filename=\"(.+)\"/);
+                    if (match) filename = match[1];
+                }
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            } catch (err) {
+                alert('Error: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Generate PDF';
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>Create Your Biodata PDF</h2>
+    <form id="biodataForm" enctype="multipart/form-data" onsubmit="handleFormSubmit(event)">
+        <label>Name <input name="name" required></label>
+        <label>Date of Birth <input name="dob" required></label>
+        <label>Blood Group <input name="blood" required></label>
+        <label>Address <input name="address" required></label>
+        <label>Years of Experience <input name="experience" required></label>
+        <label>Educational Qualification <input name="education" required></label>
+        <label>Assigned Class <input name="assignedclass" required></label>
+        <label>Other Duties <input name="duties" required></label>
+        <label>Phone Number <input name="phone" required></label>
+        <label>Email ID <input name="email" type="email" required></label>
+        <label>Profile Image <input name="profileimage" type="file" accept="image/*" required></label>
+        <button id="generateBtn" type="submit">Generate PDF</button>
+    </form>
+</body>
+</html> 
